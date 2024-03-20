@@ -3,24 +3,24 @@ import { ObjectId } from "mongodb"; // This help convert the id from string to O
 import db from "../db/connection.js";
 
 const router = Router();
-const ProjectsCollection = db.collection("projects");
+const PostsCollection = db.collection("posts");
 
-//Endpoint for getting list of projects
+//Endpoint for getting list of posts
 router.get("/", async (req, res) => {
   try {
-    let results = await ProjectsCollection.find({}).toArray();
+    let results = await PostsCollection.find({}).toArray();
     res.send(results).status(200);
   } catch (error) {
     console.error(error);
-    res.send("Error getting list of projects!").status(500);
+    res.send("Error getting list of posts!").status(500);
   }
 });
 
-//Endpoint for getting a single project by id
+//Endpoint for getting a single post by id
 router.get("/:id", async (req, res) => {
   try {
     let query = { _id: new ObjectId(req.params.id) };
-    let result = await ProjectsCollection.findOne(query);
+    let result = await PostsCollection.findOne(query);
 
     res.send(result).status(200);
   } catch (error) {
@@ -29,57 +29,53 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//Endpoint for adding a single project
+//Endpoint for adding a single post
 router.post("/", async (req, res) => {
   try {
-    let newProject = {
+    let newPost = {
       title: req.body.title,
-      description: req.body.description,
+      content: req.body.content,
       image: req.body.image,
-      link: req.body.link,
     };
 
-    let result = await ProjectsCollection.insertOne(newProject);
+    let result = await PostsCollection.insertOne(newPost);
     res.send(result).status(201);
   } catch (error) {
     console.error(error);
-    res.send("Error adding a project").status(500);
+    res.send("Error adding a post").status(500);
   }
 });
 
-//Endpoint for updating a project by the id
+//Endpoint for updating a post by the id
 router.patch("/:id", async (req, res) => {
   try {
     const query = { _id: new ObjectId(req.params.id) };
     const updates = {
       $set: {
         title: req.body.title,
-        description: req.body.description,
+        content: req.body.content,
         image: req.body.image,
-        link: req.body.link,
       },
     };
 
-    let result = await ProjectsCollection.updateOne(query, updates);
+    let result = await PostsCollection.updateOne(query, updates);
     res.send(result).status(200);
   } catch (error) {
     console.error(error);
-    res.send("Error updating a project").status(500);
+    res.send("Error updating a post").status(500);
   }
 });
 
-//Endpoint for deleting a project by id
+//Endpoint for deleting a post by id
 router.delete("/:id", async (req, res) => {
   try {
     const query = { _id: new ObjectId(req.params.id) };
-    let result = await ProjectsCollection.deleteOne(query);
+    let result = await PostsCollection.deleteOne(query);
     res.send(result).status(200);
   } catch (error) {
     console.error(error);
-    res.send("Error deleting a project").status(500);
+    res.send("Error deleting a post").status(500);
   }
 });
 
 export default router;
- 
-  
